@@ -1,0 +1,21 @@
+package br.com.douglasmotta.whitelabeltutorial.data.repository
+
+import android.net.Uri
+import br.com.douglasmotta.whitelabeltutorial.data.datasource.ProductDataSource
+import br.com.douglasmotta.whitelabeltutorial.domain.model.Product
+
+class ProductRepository(private val dataSource: ProductDataSource) {
+
+    suspend fun getProducts(): List<Product> {
+        return  dataSource.getProducts()
+    }
+
+    suspend fun uploadProductImage(imageUri: Uri): String {
+        return dataSource.uploadProductImage(imageUri)
+    }
+
+    suspend fun createProduct(product: Product): Product {
+        return dataSource.createProduct(product)
+    }
+
+}
