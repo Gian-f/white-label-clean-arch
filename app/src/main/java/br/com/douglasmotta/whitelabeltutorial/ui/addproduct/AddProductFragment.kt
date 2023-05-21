@@ -2,16 +2,18 @@ package br.com.douglasmotta.whitelabeltutorial.ui.addproduct
 
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.viewModels
 import br.com.douglasmotta.whitelabeltutorial.databinding.FragmentAddProductBinding
 import br.com.douglasmotta.whitelabeltutorial.util.CurrencyTextWatcher
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textfield.TextInputLayout
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AddProductFragment : BottomSheetDialogFragment() {
 
     private var _binding : FragmentAddProductBinding? = null
@@ -20,10 +22,11 @@ class AddProductFragment : BottomSheetDialogFragment() {
     private var imageUri: Uri? = null
 
     private val getContent =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            binding.imageProduct.setImageURI(uri)
+        registerForActivityResult(ActivityResultContracts.GetContent()) {
+            binding.imageProduct.setImageURI(imageUri)
         }
-    private lateinit var viewModel: AddProductViewModel
+
+    private val viewModel: AddProductViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
