@@ -6,15 +6,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.navigation.fragment.findNavController
+import br.com.douglasmotta.whitelabeltutorial.R
 import br.com.douglasmotta.whitelabeltutorial.databinding.FragmentProductsBinding
+import br.com.douglasmotta.whitelabeltutorial.domain.model.Product
 import br.com.douglasmotta.whitelabeltutorial.ui.products.adapters.ProductsAdapter
+import br.com.douglasmotta.whitelabeltutorial.util.PRODUCT_KEY
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ProductsFragment : Fragment() {
 
     private var _binding: FragmentProductsBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: ProductsViewModel by viewModels()
+
     private val productsAdapter = ProductsAdapter()
 
     override fun onCreateView(
@@ -29,25 +39,43 @@ class ProductsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setRecyclerView()
-        observeEvents()
-        viewModel.getProducts()
+        setListeners()
+        observeVMEvents()
+        getProducts()
     }
 
-   private fun setRecyclerView() {
+    private fun setRecyclerView() {
         binding.recyclerProducts.run {
             setHasFixedSize(true)
             adapter = productsAdapter
         }
     }
 
-    private fun observeEvents() {
+    private fun setListeners() {
+        with(binding) {
+            swipeProducts.setOnRefreshListener {
+                getProducts()
+            }
+
+            fabAdd.setOnClickListener {
+                findNavController().navigate(R.id.action_productsFragment_to_addProductFragment)
+            }
+        }
+    }
+
+    private fun getProducts() {
+        viewModel.getProducts()
+    }
+
+    private fun observeVMEvents() {
         viewModel.productsData.observe(viewLifecycleOwner) { products ->
+            binding.swipeProducts.isRefreshing = false
             productsAdapter.submitList(products)
         }
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 }

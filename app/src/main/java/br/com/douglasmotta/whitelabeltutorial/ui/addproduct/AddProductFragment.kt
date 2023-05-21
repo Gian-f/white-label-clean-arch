@@ -22,8 +22,9 @@ class AddProductFragment : BottomSheetDialogFragment() {
     private var imageUri: Uri? = null
 
     private val getContent =
-        registerForActivityResult(ActivityResultContracts.GetContent()) {
-            binding.imageProduct.setImageURI(imageUri)
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            imageUri = uri
+            binding.imageProduct.setImageURI(uri)
         }
 
     private val viewModel: AddProductViewModel by viewModels()

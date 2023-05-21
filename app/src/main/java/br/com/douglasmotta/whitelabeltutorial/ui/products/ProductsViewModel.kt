@@ -13,8 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductsViewModel @Inject constructor(
-    private val getProductsUseCase: GetProductUseCase
-): ViewModel() {
+    private val getProductsUseCase: GetProductUseCase,
+) : ViewModel() {
 
     private val _productsData = MutableLiveData<List<Product>>()
     val productsData: LiveData<List<Product>> = _productsData
@@ -27,5 +27,4 @@ class ProductsViewModel @Inject constructor(
             Log.d("ProductsViewModel", e.toString())
         }
     }
-
 }
